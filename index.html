@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WWII Battle Planner — 1939 Strategic Command</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚔️</text></svg>" />
+</head>
+<body>
+  <!-- ===== TOP BAR ===== -->
+  <header id="top-bar">
+    <div class="top-bar-left">
+      <span class="app-emblem">⚔</span>
+      <h1>STRATEGIC COMMAND <span class="year">— 1939</span></h1>
+    </div>
+    <div class="top-bar-center" id="status-message">SELECT A TERRITORY FOR INTELLIGENCE BRIEFING</div>
+    <div class="top-bar-right">
+      <button id="btn-save" title="Save battle plan">SAVE</button>
+      <button id="btn-load" title="Load battle plan">LOAD</button>
+      <button id="btn-export" title="Export plan as JSON">EXPORT</button>
+      <button id="btn-clear" title="Clear all planning markers">CLEAR</button>
+    </div>
+  </header>
+
+  <!-- ===== MAIN LAYOUT ===== -->
+  <div id="app">
+    <!-- Left toolbar for battle planning -->
+    <aside id="planning-toolbar">
+      <div class="toolbar-section">
+        <div class="toolbar-label">UNITS</div>
+        <button class="tool-btn" data-tool="infantry" title="Place Infantry">
+          <svg viewBox="0 0 40 40"><rect x="4" y="4" width="32" height="32" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><line x1="4" y1="4" x2="36" y2="36" stroke="currentColor" stroke-width="2"/><line x1="36" y1="4" x2="4" y2="36" stroke="currentColor" stroke-width="2"/></svg>
+          <span>INF</span>
+        </button>
+        <button class="tool-btn" data-tool="armor" title="Place Armor">
+          <svg viewBox="0 0 40 40"><rect x="4" y="4" width="32" height="32" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><ellipse cx="20" cy="20" rx="12" ry="8" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+          <span>ARM</span>
+        </button>
+        <button class="tool-btn" data-tool="artillery" title="Place Artillery">
+          <svg viewBox="0 0 40 40"><rect x="4" y="4" width="32" height="32" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="20" cy="20" r="8" fill="currentColor"/></svg>
+          <span>ART</span>
+        </button>
+        <button class="tool-btn" data-tool="naval" title="Place Naval">
+          <svg viewBox="0 0 40 40"><rect x="4" y="4" width="32" height="32" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><line x1="20" y1="8" x2="20" y2="32" stroke="currentColor" stroke-width="2"/><path d="M10 24 Q20 16 30 24" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+          <span>NAV</span>
+        </button>
+        <button class="tool-btn" data-tool="airforce" title="Place Air Force">
+          <svg viewBox="0 0 40 40"><rect x="4" y="4" width="32" height="32" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><line x1="10" y1="20" x2="30" y2="20" stroke="currentColor" stroke-width="2"/><line x1="20" y1="10" x2="20" y2="30" stroke="currentColor" stroke-width="2"/></svg>
+          <span>AIR</span>
+        </button>
+      </div>
+
+      <div class="toolbar-section">
+        <div class="toolbar-label">DRAW</div>
+        <button class="tool-btn" data-tool="arrow" title="Draw movement arrow">
+          <svg viewBox="0 0 40 40"><line x1="8" y1="32" x2="32" y2="8" stroke="currentColor" stroke-width="2"/><polyline points="22,8 32,8 32,18" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+          <span>ARROW</span>
+        </button>
+        <button class="tool-btn" data-tool="zone" title="Draw zone">
+          <svg viewBox="0 0 40 40"><rect x="8" y="8" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="4 2"/></svg>
+          <span>ZONE</span>
+        </button>
+        <button class="tool-btn" data-tool="note" title="Place a note">
+          <svg viewBox="0 0 40 40"><rect x="8" y="6" width="24" height="28" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><line x1="12" y1="14" x2="28" y2="14" stroke="currentColor" stroke-width="1.5"/><line x1="12" y1="20" x2="28" y2="20" stroke="currentColor" stroke-width="1.5"/><line x1="12" y1="26" x2="22" y2="26" stroke="currentColor" stroke-width="1.5"/></svg>
+          <span>NOTE</span>
+        </button>
+      </div>
+
+      <div class="toolbar-section">
+        <div class="toolbar-label">EDIT</div>
+        <button class="tool-btn" data-tool="eraser" title="Remove markers">
+          <svg viewBox="0 0 40 40"><line x1="10" y1="10" x2="30" y2="30" stroke="currentColor" stroke-width="3"/><line x1="30" y1="10" x2="10" y2="30" stroke="currentColor" stroke-width="3"/></svg>
+          <span>ERASE</span>
+        </button>
+        <button class="tool-btn" data-tool="select" title="Select/Pan (default)">
+          <svg viewBox="0 0 40 40"><path d="M12 8 L12 30 L18 24 L24 32 L28 30 L22 22 L30 22 Z" fill="currentColor"/></svg>
+          <span>SELECT</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Map container -->
+    <div id="map"></div>
+
+    <!-- Right info panel -->
+    <aside id="info-panel" class="hidden">
+      <button id="panel-close" title="Close panel">&times;</button>
+      <div id="panel-content"></div>
+    </aside>
+  </div>
+
+  <!-- Layer toggles (bottom-left overlay) -->
+  <div id="layer-controls">
+    <div class="layer-controls-title">INTELLIGENCE LAYERS</div>
+    <label><input type="checkbox" id="layer-chokepoints" checked /> Chokepoints</label>
+    <label><input type="checkbox" id="layer-naval" checked /> Naval Bases</label>
+    <label><input type="checkbox" id="layer-defensive" checked /> Defensive Lines</label>
+    <label><input type="checkbox" id="layer-industrial" checked /> Industrial Regions</label>
+    <label><input type="checkbox" id="layer-territories" checked /> Territory Colors</label>
+  </div>
+
+  <!-- Save/Load modal -->
+  <div id="modal-overlay" class="hidden">
+    <div id="modal">
+      <h2 id="modal-title">SAVE BATTLE PLAN</h2>
+      <div id="modal-body"></div>
+      <div id="modal-actions">
+        <button id="modal-confirm">CONFIRM</button>
+        <button id="modal-cancel">CANCEL</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Legend (bottom-right) -->
+  <div id="legend">
+    <div class="legend-title">ALLIANCES — 1939</div>
+    <div class="legend-item"><span class="legend-color" style="background:#b91c1c"></span> Axis Powers</div>
+    <div class="legend-item"><span class="legend-color" style="background:#1e40af"></span> Allied Powers</div>
+    <div class="legend-item"><span class="legend-color" style="background:#7f1d1d"></span> Soviet Union</div>
+    <div class="legend-item"><span class="legend-color" style="background:#1e3a5f"></span> United States</div>
+    <div class="legend-item"><span class="legend-color" style="background:#4a5568"></span> Neutral Nations</div>
+    <div class="legend-item"><span class="legend-color" style="background:#5b4a3f"></span> Colonial Territory</div>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
